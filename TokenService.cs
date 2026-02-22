@@ -37,14 +37,16 @@ namespace EmailWorkerService
             // If we have a valid, non-expired token, return it
            try
             {
-               if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpiry - ExpiryBuffer)
-            {
-                return _accessToken;
-            } 
+                if (!string.IsNullOrEmpty(_accessToken) &&
+                    _tokenExpiry > DateTime.MinValue &&
+                    DateTime.UtcNow < _tokenExpiry.Subtract(ExpiryBuffer))
+                {
+                    return _accessToken;
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error obtaining access token: {message}", ex.Message);
+                _logger.LogError(ex, "Error obtaining access token: {Message}", ex.Message);
                 throw;
             }
 
