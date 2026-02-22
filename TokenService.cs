@@ -35,9 +35,17 @@ namespace EmailWorkerService
         public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
         {
             // If we have a valid, non-expired token, return it
-            if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpiry - ExpiryBuffer)
+           try
+            {
+               if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpiry - ExpiryBuffer)
             {
                 return _accessToken;
+            } 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obtaining access token: {message}", ex.Message);
+                throw;
             }
 
            
