@@ -97,10 +97,12 @@ namespace EmailWorkerService
                 return null;
 
             return allNotifications
-                .Where(n => string.Equals(n.Channel, "EMAIL", StringComparison.OrdinalIgnoreCase))
-                .Where(n => string.Equals(n.Type, "BN", StringComparison.OrdinalIgnoreCase))
-                .Where(n => IsValidEmail(n.Recipient))
-                .ToList();
+                    .Where(n => string.Equals(n.Channel, "EMAIL", StringComparison.OrdinalIgnoreCase))
+                    .Where(n => n.Type != null &&
+                        (n.Type.Equals("BN", StringComparison.OrdinalIgnoreCase) ||
+                         n.Type.Equals("BTDN", StringComparison.OrdinalIgnoreCase)))
+                    .Where(n => IsValidEmail(n.Recipient))
+                    .ToList();
         }
 
         /// <summary>
